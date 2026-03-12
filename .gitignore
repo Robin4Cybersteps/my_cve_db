@@ -1,0 +1,33 @@
+# Bytecode and Caches
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Virtualenv
+.venv/
+venv/
+env/
+ENV/
+
+# Environment-Variables
+.env
+*.env
+!.env.example
+
+# Databases
+*.db
+*.sqlite3
+
+# Logs and Coverage
+*.log
+.coverage
+htmlcov/
+
+# Editor/OS
+.vscode/
+.DS_Store
+.DS_Store?
+
+# macOS Thumbs
+Thumbs.db
