@@ -3,7 +3,8 @@ CREATE TABLE IF NOT EXISTS cve (
     cve_description TEXT,
     published_date TEXT,
     cvss_score REAL,
-    severity TEXT CHECK (severity IN ("LOW", "MEDIUM", "HIGH", "CRITICAL"))
+    severity TEXT CHECK (severity IN ("LOW", "MEDIUM", "HIGH", "CRITICAL")),
+    cve_status TEXT
 );
 
 CREATE TABLE IF NOT EXISTS cwe (

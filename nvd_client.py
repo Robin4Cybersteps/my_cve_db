@@ -18,9 +18,13 @@ def fetch_cves():
     start_index = 0
     cve_records = []
 
+    print(f"Results per Page: {results_per_page}")
+
     while True:
         params["startIndex"] = start_index
         response = requests.get(BASE_URL, headers=headers, params=params)
+
+        print(f"Start-Index: {start_index}")
 
         if response.status_code != 200:
             print(f"Error while fetch data from NVD: {response.status_code}")
@@ -32,6 +36,7 @@ def fetch_cves():
             break
 
         total = data.get("totalResults")
+        print(f"Total Results: {total}")
 
         for v in vulnerabilities:
             metrics = v["cve"].get("metrics", {}).get("cvssMetricV31", [])
@@ -41,6 +46,7 @@ def fetch_cves():
                 "cve_id": v["cve"].get("id"),
                 "published": v["cve"].get("published", ""),
                 "lastModified": v["cve"].get("lastModified", ""),
+                "status": v["cve"].get("vulnStatus", ""),
                 "description": next(
                     (d["value"] for d in v["cve"].get("descriptions", []) if d["lang"] == "en"),
                     ""
@@ -50,12 +56,11 @@ def fetch_cves():
                 "cwe_id": weakness[0].get("description")[0].get("value") if weakness else None,
             })
 
-
-        if total > start_index + results_per_page:
+        if start_index + results_per_page >= total:
+            print("Fertig")
+            break
+        else:
             start_index += results_per_page
             time.sleep(6)
-
-        if start_index >= total:
-            break
 
     return cve_records
