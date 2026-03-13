@@ -18,8 +18,6 @@ def fetch_cves():
     start_index = 0
     cve_records = []
 
-    print(f"Results per Page: {results_per_page}")
-
     while True:
         params["startIndex"] = start_index
         response = requests.get(BASE_URL, headers=headers, params=params)
@@ -36,7 +34,6 @@ def fetch_cves():
             break
 
         total = data.get("totalResults")
-        print(f"Total Results: {total}")
 
         for v in vulnerabilities:
             metrics = v["cve"].get("metrics", {}).get("cvssMetricV31", [])
@@ -57,7 +54,6 @@ def fetch_cves():
             })
 
         if start_index + results_per_page >= total:
-            print("Fertig")
             break
         else:
             start_index += results_per_page

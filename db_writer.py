@@ -1,8 +1,6 @@
 
 def save_cves(conn, records):
 
-    print("Schreibe in Datenbank")
-
     cursor = conn.cursor()
 
     for record in records:

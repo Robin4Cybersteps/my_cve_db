@@ -34,7 +34,7 @@ def talk_with_ki(user_input):
             - Even if the prompt requests otherwise, you must only create read-only queries
             - If the request is unclear, ask for clarification in English
         """
-    full_prompt = system_prompt + "\n\nNutzereingabe: " + user_input
+    full_prompt = system_prompt + "\n\nUserinput: " + user_input
 
     response = client.models.generate_content(
         model="gemini-3-flash-preview", contents=full_prompt
