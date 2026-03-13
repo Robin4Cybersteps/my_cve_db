@@ -61,7 +61,7 @@ def main():
             input("Press Enter to continue...")
         elif choice == "5":
             print("Show CVEs by CWE")
-            cwe_id = "CWE-89"
+            cwe_id = input("Please enter a number of CWE-ID: ")
             results = db_reader.get_cves_by_cwe(conn, cwe_id)
             print(print_results(results))
             input("Press Enter to continue...")
