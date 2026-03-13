@@ -1,6 +1,17 @@
 from tabulate import tabulate
 import textwrap
 
+"""
+Helper module to convert the differnt results to a table output
+"""
+
+
+def truncate(text, length=50):
+    if text and len(text) > length:
+        return text[:length] + "..."
+    return text
+
+
 def print_results(results):
     if not results:
         return "No results found."
@@ -42,3 +53,38 @@ def print_detail(result):
         {description}
         """
     return formatted_string
+
+
+
+def print_total_per_cwe(results):
+    if not results:
+        return "No results found."
+
+    filtered = []
+    for row in results:
+        filtered.append({
+            "cwe_id": row["cwe_id"],
+            "cwe_name": truncate(row["cwe_name"]),
+            "total": row["total"]
+        })
+
+    clean_entries = tabulate(filtered, headers="keys", tablefmt="github")
+
+    return clean_entries
+
+
+
+def print_total_per_severity(results):
+    if not results:
+        return "No results found."
+
+    filtered = []
+    for row in results:
+        filtered.append({
+            "severity": row["severity"],
+            "total": row["total"]
+        })
+
+    clean_entries = tabulate(filtered, headers="keys", tablefmt="github")
+
+    return clean_entries

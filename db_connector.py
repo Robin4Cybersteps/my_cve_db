@@ -19,7 +19,7 @@ def init_db(path_db, path_sql):
         except:
             raise Exception ("Error while creating DB")
     else:
-        raise Exception ("No schema.sql found, cant't create DB")
+        raise FileNotFoundError ("No schema.sql found, cant't create DB")
 
 def open_db(path):
     try:

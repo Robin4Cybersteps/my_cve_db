@@ -44,3 +44,13 @@ def get_cves_by_cwe(conn, cwe_id):
     cursor = conn.cursor()
     cursor.execute("SELECT cve.* FROM cve JOIN cve_cwe ON cve.cve_id = cve_cwe.cve_id WHERE cve_cwe.cwe_id = ?", (cwe_id,))
     return cursor.fetchall()
+
+def count_cves_by_severity(conn):
+    cursor = conn.cursor()
+    cursor.execute("SELECT severity, COUNT(*) AS total FROM cve GROUP BY severity ORDER BY total DESC")
+    return cursor.fetchall()
+
+def count_cves_by_cwe(conn):
+    cursor = conn.cursor()
+    cursor.execute("SELECT cwe.cwe_id, cwe.cwe_name, COUNT(cve_id) AS total FROM cve_cwe JOIN cwe ON cwe.cwe_id = cve_cwe.cwe_id GROUP BY cwe.cwe_id ORDER BY total DESC")
+    return cursor.fetchall()

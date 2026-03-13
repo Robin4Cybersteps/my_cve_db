@@ -1,7 +1,7 @@
 from db_connector import start
 from nvd_client import fetch_cves
 from db_writer import save_cves
-from helpers import print_results, print_detail
+from helpers import print_results, print_detail, print_total_per_cwe, print_total_per_severity
 import db_reader
 import os
 
@@ -61,15 +61,19 @@ def main():
             input("Press Enter to continue...")
         elif choice == "5":
             print("Show CVEs by CWE")
-            print("Coming soon...")
+            cwe_id = "CWE-89"
+            results = db_reader.get_cves_by_cwe(conn, cwe_id)
+            print(print_results(results))
             input("Press Enter to continue...")
         elif choice == "6":
             print("Count CVEs by severity")
-            print("Coming soon...")
+            results = db_reader.count_cves_by_severity(conn)
+            print(print_total_per_severity(results))
             input("Press Enter to continue...")
         elif choice == "7":
             print("Count CVEs by CWE")
-            print("Coming soon...")
+            results = db_reader.count_cves_by_cwe(conn)
+            print(print_total_per_cwe(results))
             input("Press Enter to continue...")
         elif choice == "8":
             print("Ask AI")
