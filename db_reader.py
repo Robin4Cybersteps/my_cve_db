@@ -3,7 +3,7 @@ from typing import Literal, Optional
 
 class CVEQuery(BaseModel):
     column: Literal["severity", "cvss_score", "cve_status", "cve_id"]
-    operator: Literal["=", ">", "<", "!=", "IS NULL", "IS NOT NULL"]
+    operator: Literal["=", ">", "<", "!=", "IS NULL", "IS NOT NULL", "LIKE"]
     value: str | None
 
 def get_cve_by_id(conn, cve_id):
