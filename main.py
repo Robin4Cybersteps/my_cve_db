@@ -1,7 +1,12 @@
 from db_connector import start
 from nvd_client import fetch_cves
 from db_writer import save_cves
+from helpers import print_results, print_detail
 import db_reader
+import os
+
+def clear_screen():
+    os.system('cls' if os.name == 'nt' else 'clear')
 
 def show_menu():
     print("""
@@ -24,6 +29,7 @@ def show_menu():
 def main():
     conn = start()
     while True:
+        clear_screen()
         show_menu()
         choice = input("Your choice: ")
         if choice == "1":
@@ -31,27 +37,44 @@ def main():
             print("Coming soon...")
             # records = fetch_cves()
             # save_cves(conn, records)
+            input("Press Enter to continue...")
         elif choice == "2":
             print("Search CVE by ID")
-            print("Coming soon...")
+            cve_id = input("Please enter the CVE-ID: ")
+            results = db_reader.get_cve_by_id(conn, cve_id)
+            if results:
+                print(print_detail(results))
+            else:
+                print("CVE not found.")
+            input("Press Enter to continue...")
         elif choice == "3":
             print("Filter CVEs by severity")
-            print("Coming soon...")
+            severity = input("Enter severity (LOW/MEDIUM/HIGH/CRITICAL): ").upper()
+            results = db_reader.get_cves_by_severity(conn, severity)
+            print(print_results(results))
+            input("Press Enter to continue...")
         elif choice == "4":
             print("Filter CVEs by keyword")
-            print("Coming soon...")
+            keyword = input("Please enter a keyword: ")
+            results = db_reader.get_cves_by_keyword(conn, keyword)
+            print(print_results(results))
+            input("Press Enter to continue...")
         elif choice == "5":
             print("Show CVEs by CWE")
             print("Coming soon...")
+            input("Press Enter to continue...")
         elif choice == "6":
             print("Count CVEs by severity")
             print("Coming soon...")
+            input("Press Enter to continue...")
         elif choice == "7":
             print("Count CVEs by CWE")
             print("Coming soon...")
+            input("Press Enter to continue...")
         elif choice == "8":
             print("Ask AI")
             print("Coming soon...")
+            input("Press Enter to continue...")
         elif choice == "0":
             print("Exit")
             print("¯\_(ツ)_/¯")
@@ -59,6 +82,7 @@ def main():
             break
         else:
             print("Invalid choice, please try again.")
+            input("Press Enter to continue...")
 
 
 if __name__ == '__main__':

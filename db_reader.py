@@ -16,14 +16,23 @@ def get_cves_by_severity(conn, severity):
     cursor.execute("SELECT * FROM cve WHERE severity = ?", (severity,))
     return cursor.fetchall()
 
+def get_cves_by_keyword(conn, keyword):
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM cve WHERE cve_description LIKE ?", (f"%{keyword}%",))
+    return cursor.fetchall()
+
 def execute_query(conn, query: CVEQuery):
     cursor = conn.cursor()
     if query.operator in ("IS NULL", "IS NOT NULL"):
         sql = f"SELECT * FROM cve WHERE {query.column} {query.operator}"
         cursor.execute(sql)
     else:
+        if query.operator == "LIKE":
+            value = f"%{query.value}%"
+        else:
+            value = query.value
         sql = f"SELECT * FROM cve WHERE {query.column} {query.operator} ?"
-        cursor.execute(sql, (query.value,))
+        cursor.execute(sql, (value,))
     return cursor.fetchall()
 
 def get_cwe_by_id(conn, cwe_id):
