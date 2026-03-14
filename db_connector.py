@@ -31,7 +31,7 @@ def open_db(path):
         raise Exception ("Failed to open DB")
 
 def start():
-    if Path.exists(PATH_DB):
+    if Path(PATH_DB).exists():
         conn = open_db(PATH_DB)
     else:
         conn = init_db(PATH_DB, PATH_SQL)
