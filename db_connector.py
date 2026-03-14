@@ -5,7 +5,7 @@ PATH_DB = "./my_own_cve.db"
 PATH_SQL = "./schema.sql"
 
 def init_db(path_db, path_sql):
-    if Path.exists(path_sql):
+    if Path(path_sql).exists():
         try:
             with open(path_sql, 'r') as f:
                 sql_script = f.read()
