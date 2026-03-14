@@ -92,6 +92,7 @@ There is a delay of 6 seconds per 2000 entries because the nvd API is restricted
 | `helpers.py` | Output formatting |
 | `schema.sql` | Database schema |
 | `cwe_list.csv` | CWE names (MITRE v4.19.1) |
+| `.env.example` | Example of .env |
 
 ## Challenges & Learnings
 In the beginning I forgot the initial commit on the main branch, so my first
