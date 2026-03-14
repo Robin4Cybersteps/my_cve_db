@@ -25,6 +25,28 @@ I choose a structure with three tables because
 - many-to-many: one cve can have many cwes and one cwe can be part of many cves. A junction table is the connector.
 - extensibility: The vendor table was intentionally excluded to keep the scope manageable (KISS principle).
 
+```mermaid
+erDiagram
+    CVE {
+        TEXT cve_id PK
+        TEXT cve_description
+        TEXT published_date
+        REAL cvss_score
+        TEXT severity
+        TEXT cve_status
+    }
+    CWE {
+        TEXT cwe_id PK
+        TEXT cwe_name
+    }
+    CVE_CWE {
+        TEXT cve_id FK
+        TEXT cwe_id FK
+    }
+    CVE ||--o{ CVE_CWE : "has"
+    CWE ||--o{ CVE_CWE : "has"
+```
+
 ## Prerequisites
 - Python 3.x
 - NVD API Key
@@ -46,6 +68,8 @@ I choose a structure with three tables because
 ## Configuration
 1. open the .env.example
 2. insert your own API Keys
+   - (NVD)[https://nvd.nist.gov/developers/request-an-api-key]
+   - 2.2 (Gemini)[https://aistudio.google.com/]
 3. remove the .example from the filename
 
 ## How to use
@@ -68,3 +92,15 @@ There is a delay of 6 seconds per 2000 entries because the nvd API is restricted
 | `helpers.py` | Output formatting |
 | `schema.sql` | Database schema |
 | `cwe_list.csv` | CWE names (MITRE v4.19.1) |
+
+## Challenges & Learnings
+In the beginning I forgot the initial commit on the main branch, so my first
+feature branch became my main branch. After a failed workaround I initialized
+a fresh git repository to work in a clean way.
+
+As someone who recently presented on CWE-89 (SQL Injection), I wanted to create
+database requests in a safe and clean way. At the point of implementing
+AI-generated SQL requests I reached the limits of a shorthand Pydantic whitelist.
+I chose a simpler approach with basic SELECT validation to make COUNT, GROUP BY
+and multi-table queries possible without huge effort – keeping it stupid simple
+for a project of this scope.

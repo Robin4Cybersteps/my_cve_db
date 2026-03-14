@@ -17,6 +17,11 @@ def truncate(text, length=50):
         return text[:length] + "..."
     return text
 
+def print_any(results):
+    if not results:
+        return "No results found."
+
+    return tabulate(results, headers="keys", tablefmt="github")
 
 def print_results(results):
     if not results:
@@ -37,7 +42,7 @@ def print_results(results):
     return clean_entries
 
 
-def print_detail(result):
+def print_cve_details(result):
     if not result:
         return "No results found."
 
@@ -60,6 +65,20 @@ def print_detail(result):
         """
     return formatted_string
 
+
+def print_cwe_details(result):
+    if not result:
+        return "No results found."
+
+    cwe_id = result["cwe_id"]
+    cwe_name = result["cwe_name"]
+
+    formatted_string = f"""
+        CWE-ID:      {cwe_id}
+        Description:
+        {cwe_name}
+        """
+    return formatted_string
 
 
 def print_total_per_cwe(results):

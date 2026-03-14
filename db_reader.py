@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from typing import Literal, Optional
 
 class CVEQuery(BaseModel):
-    column: Literal["severity", "cvss_score", "cve_status", "cve_id"]
+    column: Literal["severity", "cvss_score", "cve_status", "cve_id", "cwe_id"]
     operator: Literal["=", ">", "<", "!=", "IS NULL", "IS NOT NULL", "LIKE"]
     value: str | None
 
@@ -49,7 +49,7 @@ def execute_query(conn, query: CVEQuery):
 
 def get_cwe_by_id(conn, cwe_id):
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM cwe WHERE cwe_id = ?", (cwe_id,))
+    cursor.execute("SELECT * FROM cwe WHERE cwe_id = ?", (f"CWE-{cwe_id}",))
     return cursor.fetchone()
 
 def get_cves_by_cwe(conn, cwe_id):
@@ -65,4 +65,17 @@ def count_cves_by_severity(conn):
 def count_cves_by_cwe(conn):
     cursor = conn.cursor()
     cursor.execute("SELECT cwe.cwe_id, cwe.cwe_name, COUNT(cve_id) AS total FROM cve_cwe JOIN cwe ON cwe.cwe_id = cve_cwe.cwe_id GROUP BY cwe.cwe_id ORDER BY total DESC")
+    return cursor.fetchall()
+
+def execute_ai_query(conn, sql):
+    sql = sql.strip()
+    if not sql.upper().startswith("SELECT"):
+        raise Exception("Only SELECT allowed!")
+    if ";" in sql:
+        raise Exception("Multiple statements not allowed!")
+    if "UNION" in sql.upper():
+        raise Exception("UNION not allowed!")
+
+    cursor = conn.cursor()
+    cursor.execute(sql)
     return cursor.fetchall()
