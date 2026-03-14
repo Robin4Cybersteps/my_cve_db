@@ -1,7 +1,9 @@
+from pathlib import Path
+import csv
+
+PATH_CSV = "./cwe_list.csv"
 
 def save_cves(conn, records):
-
-    print("Schreibe in Datenbank")
 
     cursor = conn.cursor()
 
@@ -35,3 +37,21 @@ def save_cves(conn, records):
             cursor.execute("INSERT OR IGNORE INTO cve_cwe (cve_id, cwe_id) VALUES (?, ?)", (cve_id, cwe_id))
 
     conn.commit()
+
+
+def import_cwe_list(conn):
+
+    cursor = conn.cursor()
+
+    if Path.exists(PATH_CSV):
+        with open("cwe_list.csv", "r") as f:
+            reader = csv.DictReader(f)
+            updated = 0
+            for row in reader:
+                cwe_id = "CWE-" + row["CWE-ID"]
+                name = row["Name"]
+                cursor.execute("UPDATE cwe SET cwe_name = ? WHERE cwe_id = ?", (name, cwe_id))
+                updated += cursor.rowcount
+            conn.commit()
+    else:
+        raise FileNotFoundError("CWE list not found")

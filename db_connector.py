@@ -11,6 +11,7 @@ def init_db(path_db, path_sql):
                 sql_script = f.read()
                 print(sql_script)
                 conn = sqlite3.connect(path_db)
+                conn.row_factory = sqlite3.Row
                 cursor = conn.cursor()
                 cursor.executescript(sql_script)
                 conn.commit()
@@ -18,11 +19,12 @@ def init_db(path_db, path_sql):
         except:
             raise Exception ("Error while creating DB")
     else:
-        raise Exception ("No schema.sql found, cant't create DB")
+        raise FileNotFoundError ("No schema.sql found, cant't create DB")
 
 def open_db(path):
     try:
         conn = sqlite3.connect(path)
+        conn.row_factory = sqlite3.Row
         conn.execute("PRAGMA foreign_keys = ON")
         return conn
     except:
