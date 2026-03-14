@@ -6,6 +6,18 @@ class CVEQuery(BaseModel):
     operator: Literal["=", ">", "<", "!=", "IS NULL", "IS NOT NULL", "LIKE"]
     value: str | None
 
+def is_db_empty(conn):
+    cursor = conn.cursor()
+    cursor.execute("SELECT COUNT(*) FROM cve")
+    count = cursor.fetchone()[0]
+    return count == 0
+
+def get_last_entry(conn):
+    cursor = conn.cursor()
+    cursor.execute("SELECT MAX(published_date) AS last_date FROM cve")
+    result = cursor.fetchone()
+    return result["last_date"]
+
 def get_cve_by_id(conn, cve_id):
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM cve WHERE cve_id = ?", (cve_id,))

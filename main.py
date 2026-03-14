@@ -1,9 +1,10 @@
 from db_connector import start
 from nvd_client import fetch_cves
-from db_writer import save_cves
-from helpers import print_results, print_detail, print_total_per_cwe, print_total_per_severity
+from db_writer import save_cves, import_cwe_list
+from helpers import print_results, print_detail, print_total_per_cwe, print_total_per_severity, start_date_calculator
 import db_reader
 import os
+from datetime import datetime, timedelta
 
 def clear_screen():
     os.system('cls' if os.name == 'nt' else 'clear')
@@ -28,15 +29,31 @@ def show_menu():
 
 def main():
     conn = start()
+    if db_reader.is_db_empty(conn):
+        print("Database is empty. Starting initial fetch...")
+        end_date = datetime.now()
+        start_date = end_date - timedelta(days=120)
+        end_date = end_date.strftime("%Y-%m-%dT%H:%M:%S.000")
+        start_date = start_date.strftime("%Y-%m-%dT%H:%M:%S.000")
+        records = fetch_cves(start_date, end_date)
+        save_cves(conn, records)
+        import_cwe_list(conn)
+
     while True:
         clear_screen()
         show_menu()
         choice = input("Your choice: ")
         if choice == "1":
             print("Update database (fetch from NVD)")
-            print("Coming soon...")
-            # records = fetch_cves()
-            # save_cves(conn, records)
+            last_date = db_reader.get_last_entry(conn)
+            end_date = datetime.now()
+            start_date = start_date_calculator(last_date, end_date)
+            end_date = end_date.strftime("%Y-%m-%dT%H:%M:%S.000")
+            start_date = start_date.strftime("%Y-%m-%dT%H:%M:%S.000")
+            records = fetch_cves(start_date, end_date)
+            print(f"New entries found: {len(records)}")
+            save_cves(conn, records)
+            import_cwe_list(conn)
             input("Press Enter to continue...")
         elif choice == "2":
             print("Search CVE by ID")

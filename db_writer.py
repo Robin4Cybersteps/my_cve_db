@@ -53,12 +53,5 @@ def import_cwe_list(conn):
                 cursor.execute("UPDATE cwe SET cwe_name = ? WHERE cwe_id = ?", (name, cwe_id))
                 updated += cursor.rowcount
             conn.commit()
-            print(f"Updated {updated} CWE entries.")
     else:
         raise FileNotFoundError("CWE list not found")
-
-
-if __name__ == "__main__":
-    from db_connector import start
-    conn = start()
-    import_cwe_list(conn)

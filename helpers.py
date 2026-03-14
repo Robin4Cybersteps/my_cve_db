@@ -1,9 +1,15 @@
 from tabulate import tabulate
 import textwrap
+from datetime import datetime, timedelta
 
-"""
-Helper module to convert the differnt results to a table output
-"""
+def start_date_calculator(last_date, end_date):
+    last_datetime = datetime.strptime(last_date, "%Y-%m-%dT%H:%M:%S.%f")
+    diff = end_date - last_datetime
+    if diff.days > 120:
+        start_date = end_date - timedelta(days=120)
+    else:
+        start_date = last_datetime
+    return start_date
 
 
 def truncate(text, length=50):

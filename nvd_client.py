@@ -8,21 +8,17 @@ load_dotenv()
 API_KEY = os.getenv("NVD_API_KEY")
 BASE_URL = "https://services.nvd.nist.gov/rest/json/cves/2.0"
 
-START_DATE = "2026-01-01T00:00:00.000"
-END_DATE = "2026-03-12T00:00:00.000"
 
-def fetch_cves():
+def fetch_cves(start_date, end_date):
     results_per_page = 2000
     headers = {"apiKey": API_KEY} if API_KEY else {}
-    params = {"pubStartDate": START_DATE, "pubEndDate": END_DATE, "resultsPerPage": results_per_page}
+    params = {"pubStartDate": start_date, "pubEndDate": end_date, "resultsPerPage": results_per_page}
     start_index = 0
     cve_records = []
 
     while True:
         params["startIndex"] = start_index
         response = requests.get(BASE_URL, headers=headers, params=params)
-
-        print(f"Start-Index: {start_index}")
 
         if response.status_code != 200:
             print(f"Error while fetch data from NVD: {response.status_code}")
