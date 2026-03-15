@@ -19,6 +19,42 @@ With a menu in the terminal it is possible to navigate through the different opt
 - count cve by cwe-id
 - create database request with help from ai
 
+## Prerequisites
+- Python 3.x
+- NVD API Key
+- Google Gemini API Key
+
+## Installation
+1. Clone the repository
+   `git clone https://github.com/Robin4Cybersteps/my_cve_db`
+2. Chance Directory `cd ./my_cve_db/`
+3. Create virtual environment
+   `python -m venv .venv`
+4. Activate virtual environment
+   - Mac/Linux: `source .venv/bin/activate`
+   - Windows:
+      - PowerShell: `.\.venv\Scripts\activate`
+      - CMD: `.venv\Scripts\activate.bat`
+5. Install dependencies
+   `pip install -r requirements.txt`
+6. Configure .env (see Configuration)
+7. Run `python main.py`
+
+## Configuration
+1. open the .env.example
+2. insert your own API Keys
+   - (NVD)[https://nvd.nist.gov/developers/request-an-api-key]
+   - 2.2 (Gemini)[https://aistudio.google.com/]
+3. remove the .example from the filename
+
+## How to use
+a. run `python main.py` or `python3 main.py` in the project root directory
+
+Then the menu appears in your terminal and you can use it.
+At the first start the app will create a file my_own_cve.db and fill it with data from nvd.
+This will take several seconds, it will get the entries for the last 120 days.
+There is a delay of 6 seconds per 2000 entries because the nvd API is restricted.
+
 ### Table-structure
 I choose a structure with three tables because
 - normalisation: no duplicates, each cwe is saved once
@@ -46,39 +82,6 @@ erDiagram
     CVE ||--o{ CVE_CWE : "has"
     CWE ||--o{ CVE_CWE : "has"
 ```
-
-## Prerequisites
-- Python 3.x
-- NVD API Key
-- Google Gemini API Key
-
-## Installation
-1. Clone the repository
-   `git clone https://github.com/Robin4Cybersteps/my_cve_db`
-2. Create virtual environment
-   `python -m venv .venv`
-3. Activate virtual environment
-   - Mac/Linux: `source .venv/bin/activate`
-   - Windows: `.\.venv\Scripts\activate`
-4. Install dependencies
-   `pip install -r requirements.txt`
-5. Configure .env (see Configuration)
-6. Run `python main.py`
-
-## Configuration
-1. open the .env.example
-2. insert your own API Keys
-   - (NVD)[https://nvd.nist.gov/developers/request-an-api-key]
-   - 2.2 (Gemini)[https://aistudio.google.com/]
-3. remove the .example from the filename
-
-## How to use
-a. run `python main.py` or `python3 main.py` in the project root directory
-
-Then the menu appears in your terminal and you can use it.
-At the first start the app will create a file my_own_cve.db and fill it with data from nvd.
-This will take several seconds, it will get the entries for the last 120 days.
-There is a delay of 6 seconds per 2000 entries because the nvd API is restricted.
 
 ## Project structure
 | File | Description |
