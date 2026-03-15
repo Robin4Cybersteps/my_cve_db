@@ -44,7 +44,7 @@ def import_cwe_list(conn):
     cursor = conn.cursor()
 
     if Path(PATH_CSV).exists():
-        with open("cwe_list.csv", "r") as f:
+        with open("cwe_list.csv", "r", encoding="utf-8") as f:
             reader = csv.DictReader(f)
             updated = 0
             for row in reader:
